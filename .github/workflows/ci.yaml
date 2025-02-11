@@ -2,9 +2,6 @@ name: Build
 
 on:
   pull_request:
-  push:
-    branches:
-      - master
 
 jobs:
   # Needed to publish Unit Test Results to Pull Requests
@@ -18,23 +15,6 @@ jobs:
         with:
           name: Event File
           path: ${{ github.event_path }}
-
-  assemble-release-container:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@main
-      - name: 'Login to GitHub Container Registry'
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{github.actor}}
-          password: ${{secrets.GITHUB_TOKEN}}
-      - name: 'Build Inventory Image'
-        run: |
-          docker build . --tag ghcr.io/mztud/jmx2graphite:latest
-          docker push ghcr.io/mztud/jmx2graphite:latest
   
   # check if this is needed, maybe very spammy
   assemble-container:
@@ -56,7 +36,6 @@ jobs:
 
   build-and-test:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK 17
