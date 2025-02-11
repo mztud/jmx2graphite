@@ -23,7 +23,7 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
       - name: Determine version
-        run: version=`echo '${{ github.ref }}' | cut -d '/' -f 3`; echo "::set-output name=VERSION::$version"
+        run: version=`echo '${{ github.ref }}' | cut -d '/' -f 3`; echo "name=VERSION::$version" >> $GITHUB_OUTPUT
         id: determine-version
       - name: Set version
         run: mvn versions:set -DnewVersion=${{ steps.determine-version.outputs.VERSION }}
@@ -37,7 +37,7 @@ jobs:
     steps:
       - name: Determine version
         # ref example: refs/tags/1.6.0
-        run: version=`echo '${{ github.ref }}' | cut -d '/' -f 3`; echo "::set-output name=VERSION::$version"
+        run: version=`echo '${{ github.ref }}' | cut -d '/' -f 3`; echo "name=VERSION::$version" >> $GITHUB_OUTPUT
         id: determine-version
       - name: Checkout
         uses: actions/checkout@main
